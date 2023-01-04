@@ -21,10 +21,11 @@ def unspent(addr, coin_symbol="LTC"):
         if 'data' in result.keys() and 'txs' in result['data'].keys():
             txs = response.json()['data']['txs']
             for i, tx in enumerate(txs):
-                txs[i] = {
-                    'output': "%s:%s" % (tx['txid'], tx['output_no']),
-                    'value': int(tx['value'].replace('.', '')),
-                }
+                if tx['confirmations'] >= 2:
+                    txs[i] = {
+                        'output': "%s:%s" % (tx['txid'], tx['output_no']),
+                        'value': int(tx['value'].replace('.', '')),
+                    }
             return txs
         else:
             raise Exception(response.text)
